@@ -5,4 +5,4 @@ import pandas as pd
 def get_data():
     df = pd.read_csv("data/raw/VN_housing_dataset.csv")
     
-    return df
+    return df[:-1]

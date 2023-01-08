@@ -21,9 +21,6 @@ df["town"] = le.fit_transform(df["town"])
 
 st.dataframe(df)
 
-    
-
-
 hide_streamlit_style = """
             <style>
             #MainMenu {visibility: hidden;}

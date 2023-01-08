@@ -25,7 +25,7 @@ st.dataframe(df)
 
 st.subheader("2. Tính độ tương quan giữa các cột dữ liệu")
 c_matrix, table = st.columns([1, 1])
-corr = df.corr()
+corr = df2.corr()
 fig = px.imshow(corr)
 c_matrix.plotly_chart(fig)
 
@@ -40,3 +40,7 @@ hide_streamlit_style = """
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+#df["district"] = le.inverse_transform(df["district"])
+#df["house_type"] = le.inverse_transform(df["house_type"])
+#df["town"] = le.inverse_transform(df["town"])

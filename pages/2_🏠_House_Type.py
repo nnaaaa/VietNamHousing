@@ -12,11 +12,6 @@ if "is_display_table" not in st.session_state:
 if "is_display_chart" not in st.session_state:
     st.session_state.is_display_chart = False
 
-st.title("Viet Nam Housing")
-
-st.header("Dataset")
-st.write("Giá nhà tại khu vực Hà Nội cung cấp bởi Kaggle.")
-
 df = get_dataset().copy()
 st.markdown("<br><br>", unsafe_allow_html=True)
 

@@ -2,7 +2,6 @@ import streamlit as st
 from src.session.index import get_data
 import plotly.express as px
 import pandas as pd
-from datetime import datetime
 import altair as alt
 
 

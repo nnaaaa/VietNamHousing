@@ -1,12 +1,12 @@
 import streamlit as st
-from src.session.index import get_data
+from src.session.index import get_dataset
 import plotly.express as px
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import OrdinalEncoder, LabelEncoder, MinMaxScaler
 
 st.set_page_config(
     layout="wide",
 )
-df = get_data().copy()
+df = get_dataset().copy()
 
 st.title("Viet Nam Housing")
 
@@ -14,10 +14,11 @@ st.header("Độ tương quan của khu vực, cơ sở hạ tầng (số tầng
 
 st.subheader("1. LabelEncode cho các cột dữ liệu (district, house_type, town)")
 
-le = LabelEncoder()
-df["district"] = le.fit_transform(df["district"])
-df["house_type"] = le.fit_transform(df["house_type"])
-df["town"] = le.fit_transform(df["town"])
+oe = OrdinalEncoder()
+# df["district"] = le.fit_transform(df["district"])
+# df["house_type"] = le.fit_transform(df["house_type"])
+# df["town"] = le.fit_transform(df["town"])
+df[['district', 'house_type', 'town']] = oe.fit_transform(df[['district', 'house_type', 'town']]).astype(int)
 
 st.dataframe(df)
 

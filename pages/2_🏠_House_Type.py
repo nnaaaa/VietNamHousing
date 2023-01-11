@@ -17,7 +17,8 @@ st.title("Viet Nam Housing")
 st.header("Dataset")
 st.write("Giá nhà tại khu vực Hà Nội cung cấp bởi Kaggle.")
 
-df = get_data()
+df = get_data().copy()
+st.dataframe(df)
 st.write(df)
 st.markdown("<br><br>", unsafe_allow_html=True)
 

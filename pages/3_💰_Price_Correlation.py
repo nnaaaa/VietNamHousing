@@ -18,8 +18,9 @@ oe = OrdinalEncoder()
 # df["district"] = le.fit_transform(df["district"])
 # df["house_type"] = le.fit_transform(df["house_type"])
 # df["town"] = le.fit_transform(df["town"])
-df[['district', 'house_type', 'town']] = oe.fit_transform(df[['district', 'house_type', 'town']]).astype(int)
-
+# df[['district', 'house_type', 'town']] = oe.fit_transform(df[['district', 'house_type', 'town']]).astype(int)
+# for column in df.columns:
+#     print("Missing values in column {}: {} ({}%)".format(column, df[column].isna().sum(), df[column].isna().sum() / len(df) * 100))
 st.dataframe(df)
 
 st.subheader("2. Tính độ tương quan giữa các cột dữ liệu")

@@ -22,7 +22,7 @@ st.dataframe(df)
 
 st.subheader("2. Tính độ tương quan giữa các cột dữ liệu")
 c_matrix, table = st.columns([1, 1])
-corr = df2.corr()
+corr = df.corr()
 fig = px.imshow(corr)
 c_matrix.plotly_chart(fig)
 table.dataframe(corr)

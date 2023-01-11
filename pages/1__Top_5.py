@@ -13,7 +13,7 @@ st.title("Viet Nam Housing")
 
 st.header("Top 5 khu vực")
 
-st.subheader("1. Top 5 khu vực có giá nhà trung bình cao nhất")
+st.subheader("Top 5 khu vực có giá nhà trung bình cao nhất")
 
 df_top = df[['district','price_per_m2']].groupby(['district']).mean().sort_values('price_per_m2',ascending=False).head(5)
 

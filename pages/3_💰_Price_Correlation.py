@@ -6,7 +6,7 @@ from sklearn.preprocessing import LabelEncoder
 st.set_page_config(
     layout="wide",
 )
-df = get_data()
+df = get_data().copy()
 
 st.title("Viet Nam Housing")
 

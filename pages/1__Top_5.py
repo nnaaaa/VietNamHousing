@@ -1,5 +1,5 @@
 import streamlit as st
-from src.session.index import get_data
+from src.session.index import get_dataset
 import plotly.express as px
 
 st.set_page_config(
@@ -7,7 +7,7 @@ st.set_page_config(
     page_title="Top 5 khu vực",
     page_icon="cat",
 )
-df = get_data()
+df = get_dataset()
 
 st.title("Viet Nam Housing")
 

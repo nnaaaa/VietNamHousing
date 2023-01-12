@@ -19,6 +19,11 @@ st.header("Dataset")
 st.write(data)
 
 st.markdown("***")
+
+st.header("Lợi ích của việc khai thác dữ liệu và trả lời câu hỏi trên:")
+st.subheader("Việc khai thác từng quận huyện sẽ giúp xác định, đánh giá được tổng quan quy mô và mức độ phát triển của quận, huyện đó.")
+
+st.markdown("***")
 st.header("1. Danh sách tất cả các quận:")
 district_list = pd.DataFrame(data[["district","district_label"]].drop_duplicates())
 # print(district_list.sort_values("district_label"))
@@ -56,32 +61,35 @@ st.markdown("Giá trị trung bình của GIÁ theo quận: " + str(round(trungB
 xungDang = list()
 dauTuSau = list()
 khoDauTu = list()
-for each in range(0, len(district_list)):
-    chart = data[data["district_label"] == each]
-    num_houses = chart['town'].count()
-    chart = chart.groupby(["town"]).price_per_m2.sum().reset_index()
-    fig = px.bar(chart,x = chart["town"], y = chart["price_per_m2"], title=str(data[data["district_label"] == each].iloc[0]["district"]))
-    st.write(fig)
-    st.markdown("Số nhà ở: " + str(num_houses))
-    st.write("Tổng:  " + str(round(chart["price_per_m2"].sum(),2)) + " Triệu/m2")
-    st.write("Trung bình: " + str(round((chart["price_per_m2"].sum()/num_houses), 2)) + " Triệu/m2")
-    if(chart["town"].count() < 5):
-        st.markdown("Đánh giá: Khu vực dân cư thưa thớt xa trung tâm ít phát triển.")
-        khoDauTu.append(str(data[data["district_label"] == each].iloc[0]["district"]))
-    elif ((chart["price_per_m2"].sum()/num_houses) - round(trungBinhQuanTable["Giá trung bình quận"].mean(), 2) <= 0):
-        st.markdown("Đánh giá: Khu vực đang phát triển giá trị nhà thấp (dưới trung bình).")
-        dauTuSau.append(str(data[data["district_label"] == each].iloc[0]["district"]))
-    elif((chart["price_per_m2"].sum()/num_houses) - round(trungBinhQuanTable["Giá trung bình quận"].mean(), 2) > 0):
-        st.markdown("Đánh giá: Khu vực phát triển, là trung tâm tập trung đông dân cư.")
-        xungDang.append(str(data[data["district_label"] == each].iloc[0]["district"]))
+each = st.selectbox(
+    'Chọn quận bạn muốn?',
+    district_list)
+# for each in range(0, len(district_list)):
+chart = data[data["district"] == each]
+num_houses = chart['town'].count()
+chart = chart.groupby(["town"]).price_per_m2.sum().reset_index()
+chart = chart.sort_values(["price_per_m2"])
+fig = px.bar(chart,x = chart["town"], y = chart["price_per_m2"],labels={'price_per_m2': "Tổng/m2", 'town': "Xã, Phường"}, title=str(data[data["district"] == each].iloc[0]["district"]))
+st.write(fig)
+st.markdown("Số nhà ở: " + str(num_houses))
+st.write("Tổng:  " + str(round(chart["price_per_m2"].sum(),2)) + " Triệu/m2")
+st.write("Trung bình: " + str(round((chart["price_per_m2"].sum()/num_houses), 2)) + " Triệu/m2")
+if(chart["town"].count() < 5):
+    st.markdown("Đánh giá: Khu vực dân cư thưa thớt xa trung tâm ít phát triển.")
+    khoDauTu.append(str(data[data["district"] == each].iloc[0]["district"]))
+elif ((chart["price_per_m2"].sum()/num_houses) - round(trungBinhQuanTable["Giá trung bình quận"].mean(), 2) <= 0):
+    st.markdown("Đánh giá: Khu vực đang phát triển giá trị nhà thấp (dưới trung bình).")
+    dauTuSau.append(str(data[data["district_label"] == each].iloc[0]["district"]))
+elif((chart["price_per_m2"].sum()/num_houses) - round(trungBinhQuanTable["Giá trung bình quận"].mean(), 2) > 0):
+    st.markdown("Đánh giá: Khu vực phát triển, là trung tâm tập trung đông dân cư.")
+    xungDang.append(str(data[data["district"] == each].iloc[0]["district"]))
 
 
-# cats = ['15-50', '51-85', '86-120', '121-155', '156-190', '191-225', '226-260']
-# bins=[15, 50, 85, 120, 155, 190, 225, 260]
 # trungBinhQuanTable["Price"] = pd.DataFrame(pd.cut(x = trungBinhQuanTable["Giá trung bình quận"], bins=[15, 50, 85, 120, 155, 190, 225, 260]))
 # trungBinhQuanTable["Price_label"] = le.fit_transform(trungBinhQuanTable["Price"])
 # st.write(trungBinhQuanTable)
 # charT = trungBinhQuanTable[["Price", "Price_label"]]
+# st.write(charT)
 # charT = charT.reset_index()
 # charT = charT.drop(columns=['district'])
 # charT = charT.set_index('Price_label')

@@ -38,6 +38,16 @@ st.markdown("Tổng giá toàn bộ dữ liệu: "+ str(round(data["price_per_m2
 st.markdown("Trung vị của GIÁ/m2: " + str(data["price_per_m2"].median()) + " Triệu/m2")
 st.markdown("Mode của thuộc tính GIÁ/m2 trong bộ dữ liệu: " + str(data["price_per_m2"].mode()[0])+ " Triệu/m2")
 st.markdown("Giá trị trung bình của GIÁ trên toàn bộ dữ liệu: " + str(round(data["price_per_m2"].mean(), 2))+ " Triệu/m2")
+
+trungBinhQuanTable = data.groupby(["district"])['price_per_m2'].agg(['sum','count'])
+trungBinhQuanTable["Giá trung bình quận"] = trungBinhQuanTable["sum"].values/trungBinhQuanTable["count"].values
+
+# table1["mean"] = 
+    
+    
+
+
+
 st.markdown("Giá trị trung bình của GIÁ theo quận: " + str(round((data["price_per_m2"].sum()/ 29), 2))+ " Triệu/m2")
 
 xungDang = list()
@@ -50,15 +60,18 @@ for each in range(0, len(district_list)):
     st.write(fig)
     st.write("Tổng:  " + str(round(chart["price_per_m2"].sum(),2)) + " Triệu/m2")
     if(chart["town"].count() < 5):
-        st.markdown("Khu vực dân cư thưa thớt xa trung tâm ít phát triển.")
+        st.markdown("Đánh giá: Khu vực dân cư thưa thớt xa trung tâm ít phát triển.")
         khoDauTu.append(str(data[data["district_label"] == each].iloc[0]["district"]))
     elif (chart["price_per_m2"].sum() - round((data["price_per_m2"].sum()/ 29), 2) < 0):
-        st.markdown("Khu vực đang phát triển giá trị nhà thấp (dưới trung bình).")
+        st.markdown("Đánh giá: Khu vực đang phát triển giá trị nhà thấp (dưới trung bình).")
         dauTuSau.append(str(data[data["district_label"] == each].iloc[0]["district"]))
     elif(chart["price_per_m2"].sum() - round((data["price_per_m2"].sum()/ 29), 2) > 0):
-        st.markdown("Khu vực phát triển, là trung tâm tập trung đông dân cư.")
+        st.markdown("Đánh giá: Khu vực phát triển, là trung tâm tập trung đông dân cư.")
         xungDang.append(str(data[data["district_label"] == each].iloc[0]["district"]))
 
-
+st.write(trungBinhQuanTable)
+trungBinhQuanTable = trungBinhQuanTable.sort_values(by=['Giá trung bình quận'], ascending=True)
+fig = px.bar(trungBinhQuanTable, x = trungBinhQuanTable.index, y = trungBinhQuanTable["Giá trung bình quận"], title="Giá nhà trung bình trên 1m2 theo quận.")
+st.write(fig)
 #df['Range Price'] = pd.cut(x=df['price_per_m2'], bins=[0, 50000])
 # st.write(df[df[""]])

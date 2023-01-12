@@ -1,5 +1,5 @@
 import streamlit as st
-from src.session.index import get_data
+from src.session.index import get_dataset
 import plotly.express as px
 import pandas as pd
 import altair as alt
@@ -10,7 +10,7 @@ st.set_page_config(
     page_title="Biến động giá nhà của các khu vực",
     page_icon="cat",
 )
-df = get_data()
+df = get_dataset()
 
 st.title("Viet Nam Housing")
 

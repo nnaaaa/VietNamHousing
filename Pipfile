@@ -5,6 +5,14 @@ name = "pypi"
 
 [packages]
 streamlit = "*"
+matplotlib = "*"
+numpy = "*"
+pandas = "*"
+seaborn = "*"
+streamlit = "*"
+streamlit_option_menu = "*"
+plotly = "*"
+
 
 [dev-packages]
 

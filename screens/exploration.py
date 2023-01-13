@@ -8,17 +8,15 @@ import matplotlib.pyplot as plt
 def Exploration_Screen():
     st.title("Data exploration")
     st.header("Quá trình xử lý, khám phá dữ liệu.")
-    df = pd.read_csv ('data\\raw\\VN_housing_dataset.csv')
+    df = pd.read_csv("./data/raw/VN_housing_dataset.csv")
     df = df.iloc[:-1, 1:]
     df_without_pre_proccessing = df
     st.markdown("Data without processing (Raw)")
     st.write(df_without_pre_proccessing)
-    
     st.subheader("How many rows and columns?")
     n_rows, n_cols = df.shape
     st.markdown("Rows: " + str(n_rows))
     st.markdown("Columns: " + str(n_cols))
-    
     st.subheader("What is the meaning of each row?")
     st.markdown("Each row is mmanagement some significant information of a house like address, number of rooms, number of floors, squares, price,...etc")
     st.subheader("Are there duplicated rows?")

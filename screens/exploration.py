@@ -301,12 +301,40 @@ min_df
     st.write(min_df)
     
     
-    
-    
+    st.header("With each categorical column, how are values distributed?")
+    code = '''categories = df.loc[:,df.dtypes=="object"]
+categories'''
+    st.code(code, language='python')
+    categories = df.loc[:,df.dtypes=="object"]
+    st.write(categories)
     st.markdown('***')
     
+    def draw_category_with_offset_limit(category, offset, limit):
+        fig, ax = plt.subplots(figsize=(20, 10))
+        sns.barplot(x = category.index, y = category.values, ax=ax)
+        ax.set_xticklabels(ax.get_xticklabels(), rotation = 50)
+
+        ax.set_xlim(offset * 40, limit * 40)
+        st.pyplot(fig)
+        
+    house_type_category = categories.groupby('house_type')["house_type"].count()
+
+    draw_category_with_offset_limit(house_type_category, 0, 1)
     
+    district_category = categories.groupby('district')["district"].count()
+
+    draw_category_with_offset_limit(district_category, 0, 1)
     
+    town_category = categories.groupby('town')["town"].count()
+
+    draw_category_with_offset_limit(town_category, 0, 1)
+    draw_category_with_offset_limit(town_category, 1, 2)
+    draw_category_with_offset_limit(town_category, 2, 3)
+    draw_category_with_offset_limit(town_category, 3, 4)
+    draw_category_with_offset_limit(town_category, 4, 5)
+    draw_category_with_offset_limit(town_category, 5, 6)
+    draw_category_with_offset_limit(town_category, 6, 7)
+    draw_category_with_offset_limit(town_category, 7, 8)
     st.subheader("Data after processing")
     st.write(df)
     return

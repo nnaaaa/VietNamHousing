@@ -1,14 +1,10 @@
 import streamlit as st
-from src.session.index import get_dataset
 from streamlit_option_menu import option_menu
 from screens.index import get_routes
-# from st_on_hover_tabs import on_hover_tabs
 
 st.set_page_config(
     layout="wide",
 )
-
-# st.markdown('<style>' + open('./styles.css').read() + '</style>', unsafe_allow_html=True)
 
 routes = get_routes()
 

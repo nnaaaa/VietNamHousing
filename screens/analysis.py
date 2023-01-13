@@ -1,21 +1,21 @@
 import streamlit as st
 from questions.index import get_questions
-
 from streamlit_option_menu import option_menu
 
 
 def Analysis_Screen():
     questions = get_questions()
-    with st.sidebar:
-        global selected_question
-        selected_question = option_menu("Questions", questions['name'], 
-            icons=questions['icon'], menu_icon="patch-question")
-    # question_expander = st.sidebar.expander("Questions", expanded=True)
-    questions["component"][selected_question]()
-    # st.write()
+    tabs = st.tabs(questions["name"])
+
+    for name_i in range(len(questions["name"])):
+        with tabs[name_i]:
+            questions["component"][questions["name"][name_i]]()
+
+    # expander = st.expander("Questions", expanded=True)
     # for question_name in questions["name"]:
-    #     button = question_expander.button(question_name)
-        
-    #     if button:
-    #         
+    #     clicked = expander.button(question_name)
+    #     # selected_question = option_menu("Questions", questions['name'], 
+    #     #     icons=questions['icon'], menu_icon="patch-question")
+    #     if clicked:
+    #         questions["component"][question_name]()
         

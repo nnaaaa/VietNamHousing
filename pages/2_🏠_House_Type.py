@@ -1,5 +1,5 @@
 import streamlit as st
-from src.session.index import get_data
+from src.session.index import get_dataset
 import plotly.express as px
 
 st.set_page_config(
@@ -17,9 +17,7 @@ st.title("Viet Nam Housing")
 st.header("Dataset")
 st.write("Giá nhà tại khu vực Hà Nội cung cấp bởi Kaggle.")
 
-df = get_data().copy()
-st.dataframe(df)
-st.write(df)
+df = get_dataset().copy()
 st.markdown("<br><br>", unsafe_allow_html=True)
 
 st.header("Tỉ lệ loại hình nhà ở (mặt tiền, hẻm) ở các quận, huyện")

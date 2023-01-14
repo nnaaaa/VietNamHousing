@@ -5,7 +5,6 @@ import math
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-@st.experimental_memo
 def Exploration_Screen():
     st.title("Data exploration")
     st.header("Quá trình xử lý, khám phá dữ liệu.")

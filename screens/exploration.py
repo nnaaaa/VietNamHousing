@@ -5,6 +5,7 @@ import math
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+@st.experimental_memo
 def Exploration_Screen():
     st.title("Data exploration")
     st.header("Quá trình xử lý, khám phá dữ liệu.")
@@ -53,7 +54,7 @@ df.columns = rename_lst'''
     st.markdown("squares: Houes's squares")
     st.markdown("length: House's length")
     st.markdown("width: House's width")
-    st.markdown("price_per_m2: price per m2")
+    st.markdown("price_per_m2: price per m2 (millions)")
     st.subheader("What is the current data type of each column? Are there columns having inappropriate data types?")
     code = '''df.dtypes'''
     st.code(code, language='python')
@@ -160,8 +161,7 @@ df.columns = rename_lst'''
     code = '''df = df[(df['price_per_m2'] != 0.00)]'''
     st.code(code, language='python')
     #Drop Length and width
-    st.subheader("Drop Length and width")
-    df.drop(columns=['length', 'width'])
+    
     code = '''df.drop(columns=['length', 'width'])'''
     st.code(code, language='python')
     st.subheader('What is the percentage of missing values?')
@@ -172,8 +172,11 @@ df.columns = rename_lst'''
     df = df.dropna()
     for column in df.columns:
         st.write("Missing values in column {}: {} ({}%)".format(column, df[column].isna().sum(), df[column].isna().sum() / len(df) * 100))
+        
+    st.subheader("Add price column")
     df['price'] = df['price_per_m2'] * df['squares']
-    df.to_csv("data\\processed\\VN_housing_dataset.csv", index=False)
+    st.dataframe(df[["squares", "price_per_m2", "price"]])
+    df.to_csv("data/processed/VN_housing_dataset.csv", index=False)
     
     st.subheader("With each numerical column, how are values distributed?")
     
@@ -297,6 +300,10 @@ min_df
     st.write(max_df)
     st.markdown("Bảng giá trị min của các features")
     st.write(min_df)
+    
+    st.subheader("Drop Length and width")
+    df.drop(['length', 'width'], inplace=True, axis=1)
+    st.dataframe(df)
     
     
     st.header("With each categorical column, how are values distributed?")

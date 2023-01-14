@@ -4,10 +4,13 @@ import plotly.express as px
 import plotly.figure_factory as ff
 from sklearn.preprocessing import LabelEncoder
 import pandas as pd
-
+from sklearn.cluster import KMeans
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
 
 def District_Information_Question():
-
+    ss = StandardScaler()
     data = get_dataset().copy()
     le = LabelEncoder()
     data["district_label"] = le.fit_transform(data["district"])
@@ -44,7 +47,7 @@ def District_Information_Question():
 
     trungBinhQuanTable = data.groupby(["district"])['price_per_m2'].agg(['sum','count'])
     trungBinhQuanTable["Giá trung bình quận"] = trungBinhQuanTable["sum"]/trungBinhQuanTable["count"]
-    # print(trungBinhQuanTable)
+    # print(trungBinhQuanTable)     
     st.write(trungBinhQuanTable)
     trungBinhQuanTable = trungBinhQuanTable.sort_values(by=['Giá trung bình quận'], ascending=True)
     fig = px.bar(trungBinhQuanTable, x = trungBinhQuanTable.index, y = trungBinhQuanTable["Giá trung bình quận"], title="Giá nhà trung bình trên 1m2 theo quận.")
@@ -82,9 +85,42 @@ def District_Information_Question():
         xungDang.append(str(data[data["district"] == each].iloc[0]["district"]))
 
 
-# trungBinhQuanTable["Price"] = pd.DataFrame(pd.cut(x = trungBinhQuanTable["Giá trung bình quận"], bins=[15, 50, 85, 120, 155, 190, 225, 260]))
-# trungBinhQuanTable["Price_label"] = le.fit_transform(trungBinhQuanTable["Price"])
-# st.write(trungBinhQuanTable)
+    #trungBinhQuanTable["Price"] = pd.DataFrame(pd.cut(x = trungBinhQuanTable["Giá trung bình quận"], bins=[15, 50, 85, 120, 155, 190, 225, 260]))
+    #trungBinhQuanTable["Price_label"] = le.fit_transform(trungBinhQuanTable["Price"])
+    # trungBinhQuanTable = trungBinhQuanTable[['Giá trung bình quận']]
+    kmeanChart = pd.DataFrame(data[["squares","price"]])
+    st.write(kmeanChart)
+    wcss = []
+    scaled = ss.fit_transform(kmeanChart)
+    for i in range(1, 11):
+        clustering = KMeans(n_clusters=i, init='k-means++', random_state=42)
+        clustering.fit(kmeanChart)
+        wcss.append(clustering.inertia_)
+    ks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    wcss_sc = []
+    for i in range(1, 11):
+        clustering_sc = KMeans(n_clusters=i, init='k-means++', random_state=42)
+        clustering_sc.fit(scaled)
+        wcss_sc.append(clustering_sc.inertia_)
+        
+    ks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    st.header("Sử dụng elbow method để chia cụm để quan sát sự phân bổ của giá theo diện tích.")
+    fig = plt.figure(figsize=(10, 5))
+    sns.lineplot(x = ks, y = wcss)
+    st.pyplot(fig)
+    fig.clf()
+    sns.lineplot(x = ks, y = wcss_sc)
+    st.pyplot(fig)
+    fig.clf()
+    fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(15,5))
+    sns.scatterplot(ax=axes[0], data=kmeanChart, y='price', x='squares').set_title('Without clustering')
+    sns.scatterplot(ax=axes[1], data=kmeanChart, y='price', x='squares', hue=clustering.labels_).set_title('Using the elbow method')
+    sns.scatterplot(ax=axes[2], data=kmeanChart, x='squares', y='price', hue=clustering_sc.labels_).set_title('With the Elbow method and scaled data')
+    st.pyplot(fig)
+    st.write(kmeanChart.describe().T)
+    scaled = ss.fit_transform(kmeanChart)
+    wcss_sc = []
+
 # charT = trungBinhQuanTable[["Price", "Price_label"]]
 # st.write(charT)
 # charT = charT.reset_index()

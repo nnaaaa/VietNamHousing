@@ -19,12 +19,12 @@ def get_questions():
         {
             "component": Price_Fluctuation_Question,
             "name": "📉 Price Fluctuation",
-            "icon": "cash-coin"
+            "icon": "line-chart"
         },
         {
             "component": District_Information_Question,
             "name": "🌆 District Information",
-            "icon": "cash-coin"
+            "icon": "home-night"
         },
     ]
     

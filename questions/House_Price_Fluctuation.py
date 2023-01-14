@@ -4,13 +4,6 @@ import plotly.express as px
 import pandas as pd
 import altair as alt
 
-
-# st.set_page_config(
-#     layout="wide",
-#     page_title="Biến động giá nhà của các khu vực",
-#     page_icon="cat",
-# )
-
 def Price_Fluctuation_Question():
   df = get_dataset().copy()
 

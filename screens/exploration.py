@@ -5,6 +5,7 @@ import math
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+@st.experimental_memo
 def Exploration_Screen():
     st.title("Data exploration")
     st.header("Quá trình xử lý, khám phá dữ liệu.")
@@ -50,61 +51,20 @@ df.columns = rename_lst'''
     st.markdown("paper_type: House's paper work")
     st.markdown("num_floors: How many floors are there in this house?")
     st.markdown("num_rooms: How many rooms are there in this house?")
-    st.markdown("squares: Houes's squares")
-    st.markdown("length: House's length")
-    st.markdown("width: House's width")
-    st.markdown("price_per_m2: price per m2")
+    st.markdown("squares: Houes's squares ($m^2$)")
+    st.markdown("length: House's length ($m^2$)")
+    st.markdown("width: House's width ($m^2$)")
+    st.markdown("price_per_m2: price per $m^2$ (millions)")
     st.subheader("What is the current data type of each column? Are there columns having inappropriate data types?")
     code = '''df.dtypes'''
     st.code(code, language='python')
     st.write(df.dtypes)
-    code = '''def nan_to_0(value):
-        result = 0
-        
-        try:
-            result = re.findall(r"[-+]?\d*\,?\d+|\d+", value)[0].replace(",", ".")
-            result = int(result) if result.find(".") == -1 else float(result) 
-
-        except:
-            result = 0
-        
-        return result
-    def nan_to_0_or_1(value):
-        result = 0
-        
-        try:
-            float(value)
-            result = 0
-        except:
-            result = 1
-        
-        return result
-    num_floors = df["num_floors"].tolist()
-    num_rooms = df["num_rooms"].tolist()
-    squares = df["squares"].tolist()
-    length = df["length"].tolist()
-    width = df["width"].tolist()
-    price_per_m2 = df["price_per_m2"].tolist()
-    paper_type = df["paper_type"].tolist()
-
-
-    num_floors = map(nan_to_0, num_floors)
-    num_rooms = map(nan_to_0, num_rooms)
-    squares =  map(nan_to_0, squares)
-    length =  map(nan_to_0, length)
-    width =  map(nan_to_0, width) 
-    price_per_m2 =  map(nan_to_0, price_per_m2)
-    paper_type = map(nan_to_0_or_1, paper_type)
-
-
-    df["num_floors"] = list(num_floors)
-    df["num_rooms"] = list(num_rooms)
-    df["squares"] = list(squares)
-    df["length"] = list(length)
-    df["width"] = list(width)
-    df["price_per_m2"] = list(price_per_m2)
-    df["paper_type"] = df["paper_type"].fillna("Chưa có sổ")'''
-    st.code(code, language='python')
+  
+    st.subheader('What is the percentage of missing values?')
+    for column in df.columns:
+        st.write("Missing values in column {}: {} ({}%)".format(column, df[column].isnull().sum(), df[column].isnull().sum() / len(df) * 100))
+    
+    
     def nan_to_0(value):
         result = 0
         
@@ -150,30 +110,42 @@ df.columns = rename_lst'''
     df["length"] = list(length)
     df["width"] = list(width)
     df["price_per_m2"] = list(price_per_m2)
-    df["paper_type"] = df["paper_type"].fillna("Chưa có sổ")
+    
+    
     st.subheader("Remove NaN and filling missing values")
     indexAge = df[ (df['length'] >= 1000) | (df['width'] >= 1000) | (df['squares'] >= 1000)].index
     df.drop(indexAge , inplace=True)
     # Phan Huy drop price_per_m2 value 0!
     df = df[(df['price_per_m2'] != 0.00)]
     st.subheader("Drop price_per_m2 value 0!")
-    code = '''df = df[(df['price_per_m2'] != 0.00)]'''
+    code = '''df = df[(df['price_per_m2'] > 0.00)]'''
     st.code(code, language='python')
-    #Drop Length and width
+    
+    st.subheader("Drop num_floors > 10")
+    code = '''df = df[df["num_floors"] <= 10]'''
+    st.code(code, language='python')
+    df = df[df["num_floors"] <= 10]
+    
+    st.subheader("Fill paper_type")
+    code = '''df["paper_type"] = df["paper_type"].fillna("Chưa có sổ")'''
+    st.code(code, language='python')
+    df["paper_type"] = df["paper_type"].fillna("Chưa có sổ")
+    
     st.subheader("Drop Length and width")
-    df.drop(columns=['length', 'width'])
-    code = '''df.drop(columns=['length', 'width'])'''
-    st.code(code, language='python')
-    st.subheader('What is the percentage of missing values?')
-    for column in df.columns:
-        st.write("Missing values in column {}: {} ({}%)".format(column, df[column].isnull().sum(), df[column].isnull().sum() / len(df) * 100))
+    df.drop(['length', 'width'], inplace=True, axis=1)
+    st.dataframe(df)
     
     st.subheader("Drop missing rows")
     df = df.dropna()
+    st.code("df = df.dropna()", language='python')
+    
     for column in df.columns:
         st.write("Missing values in column {}: {} ({}%)".format(column, df[column].isna().sum(), df[column].isna().sum() / len(df) * 100))
+        
+    st.subheader("Add price column")
     df['price'] = df['price_per_m2'] * df['squares']
-    df.to_csv("data\\processed\\VN_housing_dataset.csv", index=False)
+    st.dataframe(df[["squares", "price_per_m2", "price"]])
+    
     
     st.subheader("With each numerical column, how are values distributed?")
     
@@ -226,41 +198,27 @@ sns.histplot(df['price_per_m2'])'''
     fig.clf()
     
     st.markdown('***')
-    st.header("What is the percentage of missing values?")
-    code = '''percent_missing = df_without_pre_proccessing.isnull().sum() * 100 / len(df_without_pre_proccessing)
-missing_value_df = pd.DataFrame({'column_name': df_without_pre_proccessing.columns,
-                                'percent_missing': percent_missing})
-    '''
-    st.code(code, language='python')
-    percent_missing = df_without_pre_proccessing.isnull().sum() * 100 / len(df_without_pre_proccessing)
-    missing_value_df = pd.DataFrame({'column_name': df_without_pre_proccessing.columns,
-                                 'percent_missing': percent_missing})
-    st.write(missing_value_df)
     
     
     st.subheader("Min? max? Are they abnormal?")
     code = '''num_floors_max = df['num_floors'].max()
 num_rooms_max = df['num_rooms'].max()
 squares_max = df['squares'].max()
-length_max = df['length'].max()
-width_max = df['width'].max()
 price_per_m2_max = df['price_per_m2'].max()
 
-max_values = [num_floors_max, num_rooms_max, squares_max, length_max, width_max, price_per_m2_max]
+max_values = [num_floors_max, num_rooms_max, squares_max, price_per_m2_max]
 
-header = ["num_floors(num)", "num_rooms(num)", "squares(m2)", "length(m)", "width(m)", "price_per_m2(VND)"]
+header = ["num_floors(num)", "num_rooms(num)", "squares(m2)", "price_per_m2(VND)"]
 
 max_df = pd.DataFrame(max_values, header, columns=["Max"])
 num_floors_min = df['num_floors'].min()
 num_rooms_min = df['num_rooms'].min()
 squares_min = df['squares'].min()
-length_min = df['length'].min()
-width_min = df['width'].max()
 price_per_m2_min = df['price_per_m2'].min()
 
-min_values = [num_floors_min, num_rooms_min, squares_min, length_min, width_min, price_per_m2_min]
+min_values = [num_floors_min, num_rooms_min, squares_min, price_per_m2_min]
 
-header = ["num_floors(num)", "num_rooms(num)", "squares(m2)", "length(m)", "width(m)", "price_per_m2(VND)"]
+header = ["num_floors(num)", "num_rooms(num)", "squares(m2)", "price_per_m2(VND)"]
 
 min_df = pd.DataFrame(min_values, header, columns=["Min"])
 min_df
@@ -269,13 +227,11 @@ min_df
     num_floors_max = df['num_floors'].max()
     num_rooms_max = df['num_rooms'].max()
     squares_max = df['squares'].max()
-    length_max = df['length'].max()
-    width_max = df['width'].max()
     price_per_m2_max = df['price_per_m2'].max()
 
-    max_values = [num_floors_max, num_rooms_max, squares_max, length_max, width_max, price_per_m2_max]
+    max_values = [num_floors_max, num_rooms_max, squares_max, price_per_m2_max]
 
-    header = ["num_floors(num)", "num_rooms(num)", "squares(m2)", "length(m)", "width(m)", "price_per_m2(VND)"]
+    header = ["num_floors(num)", "num_rooms(num)", "squares(m2)", "price_per_m2(VND)"]
 
     max_df = pd.DataFrame(max_values, header, columns=["Max"])
     
@@ -283,13 +239,11 @@ min_df
     num_floors_min = df['num_floors'].min()
     num_rooms_min = df['num_rooms'].min()
     squares_min = df['squares'].min()
-    length_min = df['length'].min()
-    width_min = df['width'].max()
     price_per_m2_min = df['price_per_m2'].min()
 
-    min_values = [num_floors_min, num_rooms_min, squares_min, length_min, width_min, price_per_m2_min]
+    min_values = [num_floors_min, num_rooms_min, squares_min, price_per_m2_min]
 
-    header = ["num_floors(num)", "num_rooms(num)", "squares(m2)", "length(m)", "width(m)", "price_per_m2(VND)"]
+    header = ["num_floors(num)", "num_rooms(num)", "squares(m2)", "price_per_m2(VND)"]
 
     min_df = pd.DataFrame(min_values, header, columns=["Min"])
     
@@ -297,6 +251,9 @@ min_df
     st.write(max_df)
     st.markdown("Bảng giá trị min của các features")
     st.write(min_df)
+    
+    
+    df.to_csv("data/processed/VN_housing_dataset.csv", index=False)
     
     
     st.header("With each categorical column, how are values distributed?")

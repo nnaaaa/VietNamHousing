@@ -1,7 +1,7 @@
 import streamlit as st
 from src.session.index import get_dataset
 import plotly.express as px
-import plotly.figure_factory as ff
+# import plotly.figure_factory as ff
 from sklearn.preprocessing import LabelEncoder
 import pandas as pd
 from sklearn.cluster import KMeans
@@ -128,18 +128,3 @@ def District_Information_Question():
     kmeanChart['Cluster'] = kmeans.labels_
     kmeanChart.join(quanGiaSquares)
     st.write(kmeanChart.sort_values('Cluster'))
-
-# charT = trungBinhQuanTable[["Price", "Price_label"]]
-# st.write(charT)
-# charT = charT.reset_index()
-# charT = charT.drop(columns=['district'])
-# charT = charT.set_index('Price_label')
-# st.write(charT)
-# charT = charT.groupby(["Price_label"])
-# charT = charT.count()
-# st.write(charT)
-
-# charT = pd.DataFrame(charT["Price"], =cats)
-# st.write(charT)
-#df['Range Price'] = pd.cut(x=df['price_per_m2'], bins=[0, 50000])
-# st.write(df[df[""]])

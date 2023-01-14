@@ -26,6 +26,12 @@ def Reflection_Screen():
 - 🎖 Gain: biết thêm được về các thư viện để xử lí và trực quan hoá dữ liệu như: seaborn, sklearn, streamlit, pandas,...
                 ''')
     
+    st.subheader("Võ Chí Hiếu")
+    st.markdown('''
+- 🎖 Difficulty: thao tác với những những columns khó để fill cũng như dữ liệu có nhiều chỗ vô lý mà cần phải có kiến thức thực tế để handle
+- 🎖 Gain: học được thêm những kiến thức về streamlit, app, matplotlib, pandas
+                ''')
+    
     button = st.button("⭐️ Thanks for following")
     if button:
         st.balloons()

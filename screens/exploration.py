@@ -158,7 +158,7 @@ df.columns = rename_lst'''
     # Phan Huy drop price_per_m2 value 0!
     df = df[(df['price_per_m2'] != 0.00)]
     st.subheader("Drop price_per_m2 value 0!")
-    code = '''df = df[(df['price_per_m2'] != 0.00)]'''
+    code = '''df = df[(df['price_per_m2'] > 0.00)]'''
     st.code(code, language='python')
     
     st.subheader("Drop num_floors > 10")
@@ -166,6 +166,9 @@ df.columns = rename_lst'''
     st.code(code, language='python')
     df = df[df["num_floors"] <= 10]
     
+    st.subheader("Fill paper_type")
+    code = '''df = df["paper_type"].fillna("Chưa có sổ")'''
+    st.code(code, language='python')
     
     st.subheader('What is the percentage of missing values?')
     for column in df.columns:

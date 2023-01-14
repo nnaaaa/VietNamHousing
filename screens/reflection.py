@@ -20,6 +20,12 @@ def Reflection_Screen():
 - 🎖 Gain: học được cách quản lý team cũng như các kỹ năng coding trong python (streamlit, dash, pandas, sklearn, matplotlib)
                 ''')
     
+    st.subheader("Nguyễn Thành Hiệu")
+    st.markdown('''
+- 🎖 Difficulty: thiếu kiến thức về phân tích dữ liệu nên chưa khai thác sâu và tối đa được bộ dataset
+- 🎖 Gain: biết thêm được về các thư viện để xử lí và trực quan hoá dữ liệu như: seaborn, sklearn, streamlit, pandas,...
+                ''')
+    
     button = st.button("⭐️ Thanks for following")
     if button:
         st.balloons()

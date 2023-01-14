@@ -19,16 +19,6 @@ with st.sidebar:
 
 routes['component'][selected_screen]()
 
-# st.title("Viet Nam Housing")
-
-# st.title("Viet Nam Housing")
-
-# st.header("Dataset")
-# st.write("Giá nhà tại khu vực Hà Nội cung cấp bởi Kaggle.")
-
-# df = get_dataset().copy()
-
-# st.dataframe(df)
 
 
 hide_streamlit_style = """

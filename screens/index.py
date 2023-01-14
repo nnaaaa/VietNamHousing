@@ -1,6 +1,7 @@
 from screens.collection import Collection_Screen
 from screens.exploration import Exploration_Screen
 from screens.analysis import Analysis_Screen
+from screens.reflection import Reflection_Screen
 from utils.index import get_hash
 
 def get_routes():
@@ -19,6 +20,11 @@ def get_routes():
             "component": Analysis_Screen,
             "name": "Analysis",
             "icon": "bar-chart-line"
+        },
+        {
+            "component": Reflection_Screen,
+            "name": "Reflection",
+            "icon": "award"
         }
     ]
     

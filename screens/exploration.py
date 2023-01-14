@@ -160,10 +160,13 @@ df.columns = rename_lst'''
     st.subheader("Drop price_per_m2 value 0!")
     code = '''df = df[(df['price_per_m2'] != 0.00)]'''
     st.code(code, language='python')
-    #Drop Length and width
     
-    code = '''df.drop(columns=['length', 'width'])'''
+    st.subheader("Drop num_floors > 10")
+    code = '''df = df[df["num_floors"] <= 10]'''
     st.code(code, language='python')
+    df = df[df["num_floors"] <= 10]
+    
+    
     st.subheader('What is the percentage of missing values?')
     for column in df.columns:
         st.write("Missing values in column {}: {} ({}%)".format(column, df[column].isnull().sum(), df[column].isnull().sum() / len(df) * 100))
@@ -176,7 +179,7 @@ df.columns = rename_lst'''
     st.subheader("Add price column")
     df['price'] = df['price_per_m2'] * df['squares']
     st.dataframe(df[["squares", "price_per_m2", "price"]])
-    df.to_csv("data/processed/VN_housing_dataset.csv", index=False)
+    
     
     st.subheader("With each numerical column, how are values distributed?")
     
@@ -304,6 +307,8 @@ min_df
     st.subheader("Drop Length and width")
     df.drop(['length', 'width'], inplace=True, axis=1)
     st.dataframe(df)
+    
+    df.to_csv("data/processed/VN_housing_dataset.csv", index=False)
     
     
     st.header("With each categorical column, how are values distributed?")

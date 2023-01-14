@@ -23,7 +23,8 @@ def Price_Correlation_Question():
     df[['district', 'house_type', 'town', "paper_type"]] = oe.fit_transform(df[['district', 'house_type', 'town', 'paper_type']]).astype(int)
     st.dataframe(df)
 
-
+    
+    df.drop(["squares", "price_per_m2"], axis=1, inplace=True)
     st.subheader("2. Tính độ tương quan giữa các cột dữ liệu")
     c_matrix, table = st.columns([1, 1])
     corr = df.corr()
@@ -33,8 +34,8 @@ def Price_Correlation_Question():
 
 
     st.subheader("3. Biểu đồ tương quan của giá và các yếu tố khác của căn nhà")
-    price_corr = corr["price_per_m2"]
-    price_corr = price_corr.drop("price_per_m2").sort_values()
+    price_corr = corr["price"]
+    price_corr = price_corr.drop("price").sort_values()
     fig = px.bar(price_corr, x=price_corr.index, y=price_corr.values)
 
     bar_chart, explain_container = st.columns([1, 1])
@@ -50,24 +51,20 @@ def Price_Correlation_Question():
     st.subheader("4. Biểu đồ phân phối giá của số tầng và số phòng")
     num_floor_chart, num_room_chart = st.columns([1, 1])
 
-    num_floor_chart.markdown("<center>🏚 Biểu đồ phân phối giá của số tầng</center>", unsafe_allow_html=True)
-    floor_group = df.groupby(["num_floors"])[["price_per_m2"]].mean().reset_index()
-    fig = px.bar(floor_group, x="num_floors", y="price_per_m2")
-    num_floor_chart.plotly_chart(fig)
-
-    floor_group = df[df["num_floors"] < 11].groupby(["num_floors"])[["price_per_m2"]].mean().reset_index()
-    fig = px.bar(floor_group, x="num_floors", y="price_per_m2")
+    num_floor_chart.markdown("<center>🏚 Biểu đồ phân phối của số tầng</center>", unsafe_allow_html=True)
+    floor_group = df.groupby(["num_floors"])[["price"]].mean().reset_index()
+    fig = px.bar(floor_group, x="num_floors", y="price")
     num_floor_chart.plotly_chart(fig)
 
 
-    num_room_chart.markdown("<center>🏬 Biểu đồ phân phối giá của số phòng</center>", unsafe_allow_html=True)
-    floor_group = df[df["num_rooms"] > 0].groupby(["num_rooms"])[["price_per_m2"]].mean().reset_index()
-    fig = px.bar(floor_group, x="num_rooms", y="price_per_m2")
+    num_room_chart.markdown("<center>🏬 Biểu đồ phân phối của số phòng</center>", unsafe_allow_html=True)
+    floor_group = df[df["num_rooms"] > 0].groupby(["num_rooms"])[["price"]].mean().reset_index()
+    fig = px.bar(floor_group, x="num_rooms", y="price")
     num_room_chart.plotly_chart(fig)
     st.markdown('''
         🔥 Khi đi sâu vào sự tương quan của số tầng, ta có thấy những nhà có số tầng lớn (nhà chung cư, ...) rất ít và điều đó đã gây nhiễu về sự tương quan của nó. Chúng tôi đã lọc và lấy những nhà có số tầng từ `10` trở xuống để dữ liệu thực tế hơn
         <br>
-        🔥 Khi dữ liệu chỉ còn nhà `10` tầng trở xuống ta lại thấy điều ngược lại với kết luận bên trên. 
+        🔥 Có thể thấy ở số lượng tầng và phòng nhỏ hơn 5 thì giá phản ứng khá mạnh khi số phòng thay đổi nhưng khi số tầng thay đổi thì giá hầu như không thay đổi. 
         > ⏩  Vậy nên khi chọn mua nhà ta nên ưu tiên chọn số lượng phòng thay vì số tầng để giá thành có thể giảm bớt đi. <br>
         > Lưu ý rằng: việc ưu tiên này không làm ảnh hưởng quá nhiều đến giá trừ khi số tầng hoặc số phòng lớn hơn `6 hoặc 7`
         
@@ -77,7 +74,7 @@ def Price_Correlation_Question():
 
     st.subheader("5. Dự đoán giá dựa trên số tầng và số phòng")
     X_df = df[["num_rooms", "num_floors"]]
-    Y_df = df[["price_per_m2"]]
+    Y_df = df[["price"]]
 
     # train test split
     X_train, X_test, Y_train, Y_test = train_test_split(X_df, Y_df, test_size=0.2, random_state=62)
@@ -96,10 +93,10 @@ def Price_Correlation_Question():
     is_view_3d = select.checkbox("Xem 3D")
 
     if is_view_3d:
-        fig = px.scatter_3d(df[df["num_floors"] <= num_floor_filter], x="num_rooms", y="num_floors", z="price_per_m2", color="price_per_m2", height=700, width=700)
+        fig = px.scatter_3d(df[df["num_floors"] <= num_floor_filter], x="num_rooms", y="num_floors", z="price", color="price", height=700, width=700)
         chart.plotly_chart(fig)
     else:
-        fig = px.scatter(df[df["num_floors"] <= num_floor_filter], x="num_rooms", y="num_floors", color="price_per_m2", height=700, width=700)
+        fig = px.scatter(df[df["num_floors"] <= num_floor_filter], x="num_rooms", y="num_floors", color="price", height=700, width=700)
         chart.plotly_chart(fig)
 
     st.write("💎 Sử dụng mô hình hồi quy ta có thể thấy rõ hơn sự tương quan của 2 yếu tố trên")

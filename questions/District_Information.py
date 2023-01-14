@@ -88,6 +88,7 @@ def District_Information_Question():
     #trungBinhQuanTable["Price"] = pd.DataFrame(pd.cut(x = trungBinhQuanTable["Giá trung bình quận"], bins=[15, 50, 85, 120, 155, 190, 225, 260]))
     #trungBinhQuanTable["Price_label"] = le.fit_transform(trungBinhQuanTable["Price"])
     # trungBinhQuanTable = trungBinhQuanTable[['Giá trung bình quận']]
+    quanGiaSquares = pd.DataFrame(data[["district"]])
     kmeanChart = pd.DataFrame(data[["squares","price"]])
     st.write(kmeanChart)
     wcss = []
@@ -120,6 +121,13 @@ def District_Information_Question():
     st.write(kmeanChart.describe().T)
     scaled = ss.fit_transform(kmeanChart)
     wcss_sc = []
+    st.header("Perform K-Means Clustering with Optimal K")
+    st.subheader("Ở đây ta có thể thấy k ~= 3")
+    kmeans = KMeans(init="random", n_clusters=3, n_init=10, random_state=1)
+    kmeans.fit(scaled)
+    kmeanChart['Cluster'] = kmeans.labels_
+    kmeanChart.join(quanGiaSquares)
+    st.write(kmeanChart.sort_values('Cluster'))
 
 # charT = trungBinhQuanTable[["Price", "Price_label"]]
 # st.write(charT)

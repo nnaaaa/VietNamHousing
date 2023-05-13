@@ -27,19 +27,21 @@ def Price_Correlation_Question():
     df.drop(["squares", "price_per_m2"], axis=1, inplace=True)
     st.subheader("2. Tính độ tương quan giữa các cột dữ liệu")
     c_matrix, table = st.columns([1, 1])
-    corr = df.corr()
-    fig = px.imshow(corr)
-    c_matrix.plotly_chart(fig)
-    table.dataframe(corr)
+    # to_be_dropped=pd.DataFrame(df.categorical).columns
+    # to_be_dropped= df.drop(to_be_dropped,axis=1)
+    # corr = to_be_dropped.corr()
+    # fig = px.imshow(corr)
+    # c_matrix.plotly_chart(fig)
+    # table.dataframe(corr)
 
 
-    st.subheader("3. Biểu đồ tương quan của giá và các yếu tố khác của căn nhà")
-    price_corr = corr["price"]
-    price_corr = price_corr.drop("price").sort_values()
-    fig = px.bar(price_corr, x=price_corr.index, y=price_corr.values)
+    # st.subheader("3. Biểu đồ tương quan của giá và các yếu tố khác của căn nhà")
+    # price_corr = corr["price"]
+    # price_corr = price_corr.drop("price").sort_values()
+    # fig = px.bar(price_corr, x=price_corr.index, y=price_corr.values)
 
     bar_chart, explain_container = st.columns([1, 1])
-    bar_chart.plotly_chart(fig)
+    # bar_chart.plotly_chart(fig)
     explain_container.markdown('''
         🔥 Số lượng phòng, diện tích nhà cũng như số tầng ảnh hưởng rất nhiều đến giá <br>
         🔥 Đáng chú ý là việc nhà có giấy tờ hay chưa lại ít ảnh hưởng đến giá hơn <br>

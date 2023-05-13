@@ -34,9 +34,9 @@ def houseRoomsCorrelation():
   st.header("Có phải khu vực có nhiều nhà thì giá càng cao")
   df = get_dataset().copy()
 
-  rename_lst = ['No', 'date', 'address', 'district', 'town', 'house_type', 'paper_type', 'num_floors', 'num_rooms',
-            'squares', 'length', 'width', 'price_per_m2']
-  df.columns = rename_lst
+#   rename_lst = ['No', 'date', 'address', 'district', 'town', 'house_type', 'paper_type', 'num_floors', 'num_rooms',
+#             'squares', 'length', 'width', 'price_per_m2']
+#   df.columns = rename_lst
 
   num_rooms = df["num_rooms"].tolist()
   price_per_m2 = df["price_per_m2"].tolist()
